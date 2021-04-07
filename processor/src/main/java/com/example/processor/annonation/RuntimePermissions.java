@@ -1,4 +1,4 @@
-package com.example.processor;
+package com.example.processor.annonation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -6,3 +6,13 @@ java {
     sourceCompatibility = JavaVersion.VERSION_1_7
     targetCompatibility = JavaVersion.VERSION_1_7
 }
+
+dependencies {
+    //配置auto-service用于生成相关文件
+    implementation "com.google.auto.service:auto-service:1.0-rc4"
+    annotationProcessor "com.google.auto.service:auto-service:1.0-rc4"
+    //配置auto-service用于生成相关文件
+
+    //自动生成代码开源库
+    implementation 'com.squareup:javapoet:1.13.0'
+}

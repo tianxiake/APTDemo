@@ -3,51 +3,46 @@ package com.example.processor;
  * @author lyj on 2021/4/4
  */
 
+import com.google.auto.service.AutoService;
+import com.example.processor.annonation.RuntimePermissions;
+import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.TypeSpec;
+
 import java.io.IOException;
-import java.io.Writer;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
-import javax.lang.model.element.Element;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
-import javax.tools.JavaFileObject;
 
-//指定处理的注解范围
-@SupportedAnnotationTypes("com.example.processor.RuntimePermissions")
-@SupportedSourceVersion(SourceVersion.RELEASE_7)
+
+@AutoService(Processor.class)
 public class PermissionProcessor extends AbstractProcessor {
+
+	@Override
+	public Set<String> getSupportedAnnotationTypes() {
+		Set<String> supportTypes = new LinkedHashSet<>();
+		supportTypes.add(RuntimePermissions.class.getCanonicalName());
+		return supportTypes;
+	}
+
 	@Override
 	public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnvironment) {
-		System.out.println("process");
-		for (Element element : roundEnvironment.getElementsAnnotatedWith(RuntimePermissions.class)) {
-			String objectType = element.getSimpleName().toString();
-			StringBuilder builder = new StringBuilder()
-					.append("package com.example.chenchubin.myprocessor;\n\n")
-					.append("public class " + objectType + "PermissionsDispatcher" + " {\n\n")
-					.append("\tpublic String withCheck() {\n")
-					.append("\t\treturn \"");
+		// 创建Java类【你的类名】
+		TypeSpec autoClass = TypeSpec.classBuilder("AutoClass").addModifiers(Modifier.PUBLIC).build();
 
-			builder.append(objectType + "PermissionsDispatcher").append(" create successfully!!!\\n");
+		// 创建Java文档【这里定义了你的包名，随便写即可】
+		JavaFile javaFile = JavaFile.builder("com.apt.demo", autoClass).build();
 
-			builder.append("\";\n")
-					.append("\t}\n")
-					.append("}\n");
-
-			// 写入Java文件 2017/4/19 11:10
-			try {
-				JavaFileObject source = processingEnv.getFiler()
-						.createSourceFile("com.example.chenchubin.myprocessor." + objectType + "PermissionsDispatcher");
-				Writer writer = source.openWriter();
-				writer.write(builder.toString());
-				writer.flush();
-				writer.close();
-			} catch (IOException e) {
-
-			}
+		// 将文档写入
+		try {
+			javaFile.writeTo(processingEnv.getFiler());
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 		return true;
 	}

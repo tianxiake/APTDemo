@@ -1,17 +1,19 @@
 package com.example.aptdemo;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 
-import com.example.processor.RuntimePermissions;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.apt.demo.AutoClass;
+import com.example.processor.annonation.RuntimePermissions;
 
 @RuntimePermissions
-class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		AutoClass autoClass = new AutoClass();
 	}
 }
